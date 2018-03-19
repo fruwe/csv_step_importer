@@ -53,7 +53,7 @@ module BatchImporter
         dao_node.add_children dao_node_children
       end
 
-      def build_dao_for_row row
+      def build_daos_for_row row
         # build dao
         dao = dao_class.new parent: dao_node, row: row
 
