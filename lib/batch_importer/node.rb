@@ -31,7 +31,7 @@ module BatchImporter
     def add_children children, prepend: false
       children = Array(children) unless children.is_a?(Enumerable)
 
-      children = children.collect do |child, sub_children|
+      children = children.compact.collect do |child, sub_children|
         next child unless child.is_a?(Class)
         child.new parent: self, children: sub_children
       end
