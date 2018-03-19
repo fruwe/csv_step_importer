@@ -28,11 +28,6 @@ module BatchImporter
         raise 'please extend and implement'
       end
 
-      # example: [:email, :updated_at, :created_at]
-      def columns
-        raise 'please extend and implement'
-      end
-
       # example [:email, :updated_at]
       def updatable_columns
         raise 'please extend and implement'

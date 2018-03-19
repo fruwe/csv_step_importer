@@ -21,6 +21,11 @@ module BatchImporter
         name.underscore.split('/').last.to_sym
       end
 
+      # example: [:email, :updated_at, :created_at]
+      def columns
+        raise 'please extend and implement'
+      end
+
       def dao_class
         BatchImporter::Model::DAO
       end
