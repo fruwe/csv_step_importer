@@ -1,3 +1,5 @@
+require 'active_support/inflector'
+
 module BatchImporter
   module Model
     class Model < BatchImporter::Node
@@ -7,6 +9,7 @@ module BatchImporter
       def initialize **attributes
         super **attributes
 
+        add_daos
         add_model_children
       end
 
@@ -39,19 +42,26 @@ module BatchImporter
       end
 
       def dao_node
-        return @dao_node if @dao_node
+        @dao_node ||= BatchImporter::Node.new parent: self
+      end
 
-        @dao_node = BatchImporter::Node.new parent: self
-
+      def add_daos
         dao_node_children = rows.collect do |row|
-          dao_node = dao_class.new parent: @dao_node, row: row
-          row.cache[self.class.cache_key] ||= dao_node
-          dao_node
-        end
+          build_daos_for_row row
+        end.flatten
 
-        @dao_node.add_children dao_node_children
+        dao_node.add_children dao_node_children
+      end
 
-        @dao_node
+      def build_dao_for_row row
+        # build dao
+        dao = dao_class.new parent: dao_node, row: row
+
+        # add dao to cache
+        (row.cache[self.class.cache_key.pluralize] ||= []) << dao
+        row.cache[self.class.cache_key] = dao
+
+        dao
       end
     end
   end
