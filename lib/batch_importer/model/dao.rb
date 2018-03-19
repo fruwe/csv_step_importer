@@ -29,7 +29,7 @@ module BatchImporter
       end
 
       def current_timestamp
-        model.cache[:updated_at] ||= Time.current.to_s(:db)
+        model.cache[:updated_at] ||= ::Time.current.to_s(:db)
       end
 
       def created_at

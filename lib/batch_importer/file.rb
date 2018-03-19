@@ -27,15 +27,15 @@ module BatchImporter
     end
 
     def load_csv
-      raise CSVFileNotFoundError.new unless File.exists? path
+      raise CSVFileNotFoundError.new unless ::File.exists? path
 
-      SmarterCSV.process(path, **csv_options.deep_dup) do |rows|
+      ::SmarterCSV.process(path, **csv_options.deep_dup) do |rows|
         add_children chunk_class.new parent: self, rows: rows, row_class: row_class, processor_classes: processor_classes
       end
     rescue EOFError
     rescue CSVFileNotFoundError => exception
       self.csv_load_error = exception
-    rescue CSV::MalformedCSVError => exception
+    rescue ::CSV::MalformedCSVError => exception
       self.csv_load_error = exception
     end
 
