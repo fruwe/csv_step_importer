@@ -1,58 +1,60 @@
-class BatchImporter::Base
-  include ActiveModel::Validations
-  include ActiveModel::Conversion
-  extend ActiveModel::Naming
+module BatchImporter
+  class Base
+    include ActiveModel::Validations
+    include ActiveModel::Conversion
+    extend ActiveModel::Naming
 
-  class CSVImportError < RuntimeError; end
-  class CSVFileImportError < CSVImportError; end
+    class CSVImportError < RuntimeError; end
+    class CSVFileImportError < CSVImportError; end
 
-  def assign_attributes attributes
-    attributes.each do |key, value|
-      send("#{key}=", value)
-    end
-  end
-
-  def persisted?
-    false
-  end
-
-  def create_or_update
-    raise 'please extend and implement'
-  end
-
-  def save
-    return false unless valid?
-
-    status = !!ActiveRecord::Base.transaction do
-      raise ActiveRecord::Rollback unless create_or_update
-      true
+    def assign_attributes attributes
+      attributes.each do |key, value|
+        send("#{key}=", value)
+      end
     end
 
-    status
-  end
+    def persisted?
+      false
+    end
 
-  def save!
-    save || raise(CSVFileImportError.new(errors&.messages))
-  end
+    def create_or_update
+      raise 'please extend and implement'
+    end
 
-  def update attributes
-    assign_attributes(attributes)
-    save
-  end
+    def save
+      return false unless valid?
 
-  def inspect
-    to_s
-  end
+      status = !!ActiveRecord::Base.transaction do
+        raise ActiveRecord::Rollback unless create_or_update
+        true
+      end
 
-  def to_s
-    vars = self.instance_variables.map do |key|
-      next if key == :@children
-      next if key == :@parent
-      next if key == :@env
-      next if key == :@errors
-      next if key == :@cache
-      "#{key}=#{instance_variable_get(key).inspect}"
-    end.compact.join(", ")
-    "<#{self.class}: #{vars}>"
+      status
+    end
+
+    def save!
+      save || raise(CSVFileImportError.new(errors&.messages))
+    end
+
+    def update attributes
+      assign_attributes(attributes)
+      save
+    end
+
+    def inspect
+      to_s
+    end
+
+    def to_s
+      vars = self.instance_variables.map do |key|
+        next if key == :@children
+        next if key == :@parent
+        next if key == :@env
+        next if key == :@errors
+        next if key == :@cache
+        "#{key}=#{instance_variable_get(key).inspect}"
+      end.compact.join(", ")
+      "<#{self.class}: #{vars}>"
+    end
   end
 end
