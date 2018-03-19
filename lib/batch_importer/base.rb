@@ -1,8 +1,11 @@
 module BatchImporter
   class Base
     include ::ActiveModel::Validations
+    include ::ActiveModel::Validations::Callbacks
     include ::ActiveModel::Conversion
     extend ::ActiveModel::Naming
+
+    define_callbacks :save
 
     class CSVImportError < RuntimeError; end
     class CSVFileImportError < CSVImportError; end
@@ -22,14 +25,16 @@ module BatchImporter
     end
 
     def save
-      return false unless valid?
+      run_callbacks :save do
+        return false unless valid?
 
-      status = !!::ActiveRecord::Base.transaction do
-        raise ::ActiveRecord::Rollback unless create_or_update
-        true
+        status = !!::ActiveRecord::Base.transaction do
+          raise ::ActiveRecord::Rollback unless create_or_update
+          true
+        end
+
+        status
       end
-
-      status
     end
 
     def save!
