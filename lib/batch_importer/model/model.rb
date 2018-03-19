@@ -62,9 +62,11 @@ module BatchImporter
 
       def link_rows_to_daos daos:
         daos.each do |dao|
+          # add to cache with pluralized key
+          (dao.row.cache[self.class.cache_key.to_s.pluralize.to_sym] ||= []) << dao
+
           # add dao to cache
-          (row.cache[self.class.cache_key.to_s.pluralize.to_sym] ||= []) << dao
-          row.cache[self.class.cache_key] = dao
+          dao.row.cache[self.class.cache_key] = dao
         end
       end
     end
