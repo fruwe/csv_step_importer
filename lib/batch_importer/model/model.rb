@@ -48,20 +48,24 @@ module BatchImporter
       def add_daos
         dao_node_children = rows.collect do |row|
           build_daos_for_row row
-        end.flatten
+        end.flatten.compact
+
+        link_rows_to_daos daos: dao_node_children
 
         dao_node.add_children dao_node_children
       end
 
+      # can return nil, a single object or an array of objects
       def build_daos_for_row row
-        # build dao
-        dao = dao_class.new parent: dao_node, row: row
+        dao_class.new parent: dao_node, row: row
+      end
 
-        # add dao to cache
-        (row.cache[self.class.cache_key.to_s.pluralize.to_sym] ||= []) << dao
-        row.cache[self.class.cache_key] = dao
-
-        dao
+      def link_rows_to_daos daos:
+        daos.each do |dao|
+          # add dao to cache
+          (row.cache[self.class.cache_key.to_s.pluralize.to_sym] ||= []) << dao
+          row.cache[self.class.cache_key] = dao
+        end
       end
     end
   end
