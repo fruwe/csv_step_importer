@@ -58,7 +58,7 @@ module BatchImporter
         dao = dao_class.new parent: dao_node, row: row
 
         # add dao to cache
-        (row.cache[self.class.cache_key.pluralize] ||= []) << dao
+        (row.cache[self.class.cache_key.to_s.pluralize.to_sym] ||= []) << dao
         row.cache[self.class.cache_key] = dao
 
         dao
