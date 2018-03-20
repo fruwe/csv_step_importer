@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module BatchImporter
   module Model
     class Reflector < BatchImporter::Node
@@ -14,7 +16,7 @@ module BatchImporter
       end
 
       def finder_key
-        raise 'not yet supported' unless finder_keys.size == 1
+        raise "not yet supported" unless finder_keys.size == 1
         finder_keys.first
       end
 
@@ -36,7 +38,7 @@ module BatchImporter
       end
 
       # set ids
-      def dao_ids= ids
+      def dao_ids=(ids)
         raise "Unable to find saved data. Please check your scope." unless ids.size == daos.size
 
         daos.each_with_index do |dao, index|

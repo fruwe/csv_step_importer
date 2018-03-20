@@ -1,4 +1,6 @@
-require 'active_support/inflector'
+# frozen_string_literal: true
+
+require "active_support/inflector"
 
 module BatchImporter
   module Model
@@ -6,7 +8,7 @@ module BatchImporter
       attr_accessor :dao_values
       delegate :rows, :cache, to: :parent
 
-      def initialize **attributes
+      def initialize(**attributes)
         super **attributes
 
         add_daos
@@ -18,12 +20,12 @@ module BatchImporter
       #########################################################
 
       def self.cache_key
-        name.underscore.split('/').last.to_sym
+        name.underscore.split("/").last.to_sym
       end
 
       # example: [:email, :updated_at, :created_at]
       def columns
-        raise 'please extend and implement'
+        raise "please extend and implement"
       end
 
       def dao_class
@@ -61,11 +63,11 @@ module BatchImporter
       end
 
       # can return nil, a single object or an array of objects
-      def build_daos_for_row row
+      def build_daos_for_row(row)
         dao_class.new parent: dao_node, row: row
       end
 
-      def link_rows_to_daos daos:
+      def link_rows_to_daos(daos:)
         daos.each do |dao|
           # add to cache with pluralized key
           (dao.row.cache[self.class.cache_key.to_s.pluralize.to_sym] ||= []) << dao

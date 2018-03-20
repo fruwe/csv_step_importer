@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module BatchImporter
   class File < BatchImporter::Node
     class CSVFileNotFoundError < CSVImportError; end
@@ -10,7 +12,7 @@ module BatchImporter
     validates :row_class, presence: true
     validate :validate_csv_load_error
 
-    def initialize path:, chunk_class: nil, row_class: nil, csv_options: {}, processor_classes: nil, **attributes
+    def initialize(path:, chunk_class: nil, row_class: nil, csv_options: {}, processor_classes: nil, **attributes)
       super **attributes
 
       self.chunk_class = chunk_class || BatchImporter::Chunk

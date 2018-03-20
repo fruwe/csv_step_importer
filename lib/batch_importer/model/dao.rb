@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module BatchImporter
   module Model
     class DAO < BatchImporter::Node
@@ -7,7 +9,7 @@ module BatchImporter
 
       validates :row, presence: true
 
-      def initialize row:, **attributes
+      def initialize(row:, **attributes)
         super **attributes
 
         self.row = row

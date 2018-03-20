@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module BatchImporter
   module Model
     class ImportableModel < BatchImporter::Model::Model
@@ -7,7 +9,7 @@ module BatchImporter
 
       # example: User
       def model_class
-        raise 'please extend and implement'
+        raise "please extend and implement"
       end
 
       def importer_class
@@ -25,12 +27,12 @@ module BatchImporter
 
       # example: [:email]
       def finder_keys
-        raise 'please extend and implement'
+        raise "please extend and implement"
       end
 
       # example [:email, :updated_at]
       def updatable_columns
-        raise 'please extend and implement'
+        raise "please extend and implement"
       end
 
       #########################################################

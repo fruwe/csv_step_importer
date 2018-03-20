@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module BatchImporter
   module Model
     class Importer < BatchImporter::Node
@@ -22,7 +24,7 @@ module BatchImporter
         true
       end
 
-      def import values
+      def import(values)
         self.values = values
         save!
       end
@@ -31,7 +33,7 @@ module BatchImporter
         return unless errors.empty?
 
         if (updatable_columns - columns).present?
-          errors[:updatable_columns] << 'updatedable_columns must be subset of columns'
+          errors[:updatable_columns] << "updatedable_columns must be subset of columns"
         end
       end
     end

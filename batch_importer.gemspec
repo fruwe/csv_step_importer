@@ -1,4 +1,6 @@
 
+# frozen_string_literal: true
+
 lib = File.expand_path("../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require "batch_importer/version"
@@ -9,7 +11,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Christian-Manuel Butzke"]
   spec.email         = ["chris@fruwe.com"]
 
-  spec.summary       = %q{Import your CSV files in multiple steps}
+  spec.summary       = "Import your CSV files in multiple steps"
   # spec.description   = %q{TODO: Write a longer description or delete this line.}
   spec.homepage      = "https://github.com/fruwe/batch_importer"
   spec.license       = "MIT"
@@ -33,9 +35,11 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "bundler", "~> 1.16"
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "rspec", "~> 3.0"
+  spec.add_development_dependency "rubocop-rails"
+  spec.add_development_dependency "rubocop-rspec"
 
-  spec.add_dependency 'activerecord-import'
-  spec.add_dependency 'activesupport'
-  spec.add_dependency 'activemodel'
-  spec.add_dependency 'smarter_csv'
+  spec.add_dependency "activerecord-import"
+  spec.add_dependency "activesupport"
+  spec.add_dependency "activemodel"
+  spec.add_dependency "smarter_csv"
 end

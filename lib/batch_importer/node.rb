@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module BatchImporter
   class Node < BatchImporter::Base
     attr_accessor :children
@@ -10,7 +12,7 @@ module BatchImporter
 
     validate :validate_children
 
-    def initialize parent: nil, children: [], env: nil
+    def initialize(parent: nil, children: [], env: nil)
       super()
 
       self.env = env
@@ -23,12 +25,12 @@ module BatchImporter
     end
 
     # childrenはHash型またはArray型です
-    def children= children
+    def children=(children)
       @children = []
       add_children children
     end
 
-    def add_children children, prepend: false
+    def add_children(children, prepend: false)
       children = Array(children) unless children.is_a?(Enumerable)
 
       children = children.collect do |child, sub_children|

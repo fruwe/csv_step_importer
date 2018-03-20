@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module BatchImporter
   class Base
     include ::ActiveModel::Validations
@@ -10,7 +12,7 @@ module BatchImporter
     class CSVImportError < RuntimeError; end
     class CSVFileImportError < CSVImportError; end
 
-    def assign_attributes attributes
+    def assign_attributes(attributes)
       attributes.each do |key, value|
         send("#{key}=", value)
       end
@@ -21,7 +23,7 @@ module BatchImporter
     end
 
     def create_or_update
-      raise 'please extend and implement'
+      raise "please extend and implement"
     end
 
     def save
@@ -41,7 +43,7 @@ module BatchImporter
       save || raise(CSVFileImportError.new(errors&.messages))
     end
 
-    def update attributes
+    def update(attributes)
       assign_attributes(attributes)
       save
     end
