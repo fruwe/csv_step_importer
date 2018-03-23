@@ -2,9 +2,9 @@
 
 require "active_support/inflector"
 
-module BatchImporter
+module CSVStepImporter
   module Model
-    class Model < BatchImporter::Node
+    class Model < CSVStepImporter::Node
       attr_accessor :dao_values
       delegate :rows, :cache, to: :parent
 
@@ -29,7 +29,7 @@ module BatchImporter
       end
 
       def dao_class
-        BatchImporter::Model::DAO
+        CSVStepImporter::Model::DAO
       end
 
       #########################################################
@@ -49,7 +49,7 @@ module BatchImporter
       end
 
       def dao_node
-        @dao_node ||= BatchImporter::Node.new parent: self
+        @dao_node ||= CSVStepImporter::Node.new parent: self
       end
 
       def add_daos

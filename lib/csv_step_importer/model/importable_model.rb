@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-module BatchImporter
+module CSVStepImporter
   module Model
-    class ImportableModel < BatchImporter::Model::Model
+    class ImportableModel < CSVStepImporter::Model::Model
       #########################################################
       # Configuration
       #########################################################
@@ -13,11 +13,11 @@ module BatchImporter
       end
 
       def importer_class
-        BatchImporter::Model::Importer
+        CSVStepImporter::Model::Importer
       end
 
       def reflector_class
-        BatchImporter::Model::Reflector
+        CSVStepImporter::Model::Reflector
       end
 
       # example: env[:company].company_users

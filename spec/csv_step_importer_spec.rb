@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-RSpec.describe BatchImporter do
+RSpec.describe CSVStepImporter do
   it "has a version number" do
-    expect(BatchImporter::VERSION).not_to be nil
+    expect(CSVStepImporter::VERSION).not_to be nil
   end
 
   it "does something useful" do

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-module BatchImporter
+module CSVStepImporter
   module Model
-    class DAO < BatchImporter::Node
+    class DAO < CSVStepImporter::Node
       attr_accessor :id, :row
 
       delegate :columns, to: :model

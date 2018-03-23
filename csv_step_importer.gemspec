@@ -3,17 +3,17 @@
 
 lib = File.expand_path("../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require "batch_importer/version"
+require "csv_step_importer/version"
 
 Gem::Specification.new do |spec|
-  spec.name          = "batch_importer"
-  spec.version       = BatchImporter::VERSION
+  spec.name          = "csv_step_importer"
+  spec.version       = CSVStepImporter::VERSION
   spec.authors       = ["Christian-Manuel Butzke"]
   spec.email         = ["chris@fruwe.com"]
 
   spec.summary       = "Import your CSV files in multiple steps"
   # spec.description   = %q{TODO: Write a longer description or delete this line.}
-  spec.homepage      = "https://github.com/fruwe/batch_importer"
+  spec.homepage      = "https://github.com/fruwe/csv_step_importer"
   spec.license       = "MIT"
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'

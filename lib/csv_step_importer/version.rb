@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
-module BatchImporter
+module CSVStepImporter
   VERSION = "0.2.9"
 end

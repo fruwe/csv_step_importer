@@ -4,5 +4,5 @@ source "https://rubygems.org"
 
 git_source(:github) { |repo_name| "https://github.com/#{repo_name}" }
 
-# Specify your gem's dependencies in batch_importer.gemspec
+# Specify your gem's dependencies in csv_step_importer.gemspec
 gemspec

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-module BatchImporter
-  class Node < BatchImporter::Base
+module CSVStepImporter
+  class Node < CSVStepImporter::Base
     attr_accessor :children
     attr_accessor :parent
 

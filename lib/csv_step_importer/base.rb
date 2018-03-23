@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module BatchImporter
+module CSVStepImporter
   class Base
     include ::ActiveModel::Validations
     include ::ActiveModel::Validations::Callbacks

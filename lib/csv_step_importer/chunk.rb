@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-module BatchImporter
-  class Chunk < BatchImporter::Node
+module CSVStepImporter
+  class Chunk < CSVStepImporter::Node
     attr_accessor :cache, :rows
 
-    def initialize(rows: [], row_class: BatchImporter::Row, processor_classes: nil, **attributes)
+    def initialize(rows: [], row_class: CSVStepImporter::Row, processor_classes: nil, **attributes)
       super **attributes
 
       self.cache = {}
@@ -13,7 +13,7 @@ module BatchImporter
     end
 
     def add_rows(rows:, row_class:)
-      row_parent_node = BatchImporter::Node.new parent: self
+      row_parent_node = CSVStepImporter::Node.new parent: self
 
       unless rows.empty? || rows.first.is_a?(row_class)
         row_number = 0

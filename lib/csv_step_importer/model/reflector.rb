@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-module BatchImporter
+module CSVStepImporter
   module Model
-    class Reflector < BatchImporter::Node
+    class Reflector < CSVStepImporter::Node
       delegate :model_class, to: :parent
       delegate :finder_keys, to: :parent
       delegate :finder_scope, to: :parent

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-module BatchImporter
+module CSVStepImporter
   module Model
-    class Importer < BatchImporter::Node
+    class Importer < CSVStepImporter::Node
       attr_accessor :dao_values
 
       validate :validate_updatable_columns

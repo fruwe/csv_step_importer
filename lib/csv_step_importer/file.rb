@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-module BatchImporter
-  class File < BatchImporter::Node
+module CSVStepImporter
+  class File < CSVStepImporter::Node
     class CSVFileNotFoundError < CSVImportError; end
 
     attr_accessor :chunk_class, :csv_options, :path, :row_class, :processor_classes, :csv_load_error
@@ -15,9 +15,9 @@ module BatchImporter
     def initialize(path:, chunk_class: nil, row_class: nil, csv_options: {}, processor_classes: nil, **attributes)
       super **attributes
 
-      self.chunk_class = chunk_class || BatchImporter::Chunk
+      self.chunk_class = chunk_class || CSVStepImporter::Chunk
       self.path = path
-      self.row_class = row_class || BatchImporter::Row
+      self.row_class = row_class || CSVStepImporter::Row
       self.processor_classes = processor_classes
 
       self.csv_options = {

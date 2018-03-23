@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-module BatchImporter
-  class Row < BatchImporter::Node
+module CSVStepImporter
+  class Row < CSVStepImporter::Node
     attr_accessor :attributes, :cache, :row_number
 
     def initialize(parent:, row_number:, **attributes)
