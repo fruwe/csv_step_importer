@@ -30,6 +30,11 @@ module CSVStepImporter
         raise "please extend and implement"
       end
 
+      # see: https://github.com/zdennis/activerecord-import/wiki/On-Duplicate-Key-Update
+      def on_duplicate_key_ignore
+        false
+      end
+
       # example [:email, :updated_at]
       # see: https://github.com/zdennis/activerecord-import/wiki/On-Duplicate-Key-Update
       def on_duplicate_key_update
