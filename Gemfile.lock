@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    csv_step_importer (0.2.8)
+    csv_step_importer (0.5.0)
       activemodel
       activerecord-import
       activesupport
@@ -110,8 +110,8 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  csv_step_importer!
   bundler (~> 1.16)
+  csv_step_importer!
   rake (~> 10.0)
   rspec (~> 3.0)
   rubocop-rails
