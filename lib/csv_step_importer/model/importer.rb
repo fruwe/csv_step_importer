@@ -5,7 +5,7 @@ module CSVStepImporter
     class Importer < CSVStepImporter::Node
       attr_accessor :dao_values
 
-      validate :validate_updatable_columns
+      validate :validate_updatable_columns, unless: -> { updatable_columns.any? { |column| column.is_a?(Hash) } }
 
       delegate :model_class, to: :parent
       delegate :columns, to: :parent
@@ -33,7 +33,7 @@ module CSVStepImporter
         return unless errors.empty?
 
         if (updatable_columns - columns).present?
-          errors[:updatable_columns] << "updatedable_columns must be subset of columns"
+          errors[:updatable_columns] << "updatable_columns must be subset of columns"
         end
       end
     end
