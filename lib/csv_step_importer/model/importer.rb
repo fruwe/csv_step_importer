@@ -5,18 +5,16 @@ module CSVStepImporter
     class Importer < CSVStepImporter::Node
       attr_accessor :dao_values
 
-      validate :validate_updatable_columns, unless: -> { updatable_columns.any? { |column| column.is_a?(Hash) } }
-
       delegate :model_class, to: :parent
       delegate :columns, to: :parent
-      delegate :updatable_columns, to: :parent
+      delegate :on_duplicate_key_update, to: :parent
       delegate :dao_values, to: :parent
 
       def create_or_update
         model_class.import(
           columns,
           dao_values,
-          on_duplicate_key_update: updatable_columns,
+          on_duplicate_key_update: on_duplicate_key_update,
           validate: false,
           timestamps: false,
         )
@@ -27,14 +25,6 @@ module CSVStepImporter
       def import(values)
         self.values = values
         save!
-      end
-
-      def validate_updatable_columns
-        return unless errors.empty?
-
-        if (updatable_columns - columns).present?
-          errors[:updatable_columns] << "updatable_columns must be subset of columns"
-        end
       end
     end
   end

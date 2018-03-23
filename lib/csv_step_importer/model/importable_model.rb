@@ -31,7 +31,8 @@ module CSVStepImporter
       end
 
       # example [:email, :updated_at]
-      def updatable_columns
+      # see: https://github.com/zdennis/activerecord-import/wiki/On-Duplicate-Key-Update
+      def on_duplicate_key_update
         raise "please extend and implement"
       end
 
