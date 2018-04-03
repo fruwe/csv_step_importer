@@ -9,6 +9,7 @@ module CSVStepImporter
 
       self.cache = {}
       self.attributes = attributes
+      self.row_number = row_number
     end
 
     def create_or_update
