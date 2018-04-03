@@ -4,7 +4,7 @@ module CSVStepImporter
   class File < CSVStepImporter::Node
     class CSVFileNotFoundError < CSVImportError; end
 
-    attr_accessor :chunk_class, :csv_options, :path, :row_class, :processor_classes, :csv_load_error
+    attr_accessor :chunk_class, :csv_options, :headers, :path, :row_class, :processor_classes, :csv_load_error
 
     validates :chunk_class, presence: true
     validates :csv_options, presence: true
@@ -32,6 +32,7 @@ module CSVStepImporter
       raise CSVFileNotFoundError.new unless ::File.exists? path
 
       ::SmarterCSV.process(path, **csv_options.deep_dup) do |rows|
+        self.headers ||= rows.first&.keys
         add_children chunk_class.new parent: self, rows: rows, row_class: row_class, processor_classes: processor_classes
       end
     rescue EOFError
