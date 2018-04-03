@@ -10,7 +10,7 @@ module CSVStepImporter
     delegate :cache, to: :root
     delegate :root, to: :parent
 
-    after_validations :validate_children
+    after_validation :validate_children
 
     def initialize(parent: nil, children: [], env: nil)
       super()
