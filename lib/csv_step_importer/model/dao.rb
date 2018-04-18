@@ -31,7 +31,7 @@ module CSVStepImporter
       end
 
       def current_timestamp
-        model.cache[:updated_at] ||= ::Time.current.to_s(:db)
+        model.cache[:updated_at] ||= (::ActiveRecord::Base.default_timezone == :utc ? ::Time.now.utc : ::Time.now).to_s(:db)
       end
 
       def created_at
