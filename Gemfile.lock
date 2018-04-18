@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    csv_step_importer (0.5.7)
+    csv_step_importer (0.5.9)
       activemodel
       activerecord-import
       activesupport
