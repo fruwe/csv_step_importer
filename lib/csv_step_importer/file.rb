@@ -45,7 +45,7 @@ module CSVStepImporter
 
     def validate_csv_load_error
       return unless csv_load_error
-      errors[:csv_file] << csv_load_error.message
+      errors[:csv_file] << I18n.t(".errors.#{csv_load_error.class.name.underscore.gsub(/\//, '_')}")
     end
   end
 end
