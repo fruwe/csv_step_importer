@@ -35,7 +35,8 @@ module CSVStepImporter
         self.headers ||= rows.first&.keys
         add_children chunk_class.new parent: self, rows: rows, row_class: row_class, processor_classes: processor_classes
       end
-    rescue EOFError
+    rescue EOFError => exception
+      self.csv_load_error = exception
     rescue CSVFileNotFoundError => exception
       self.csv_load_error = exception
     rescue ::CSV::MalformedCSVError => exception
