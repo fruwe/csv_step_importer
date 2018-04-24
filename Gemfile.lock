@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    csv_step_importer (0.5.9)
+    csv_step_importer (0.6.1)
       activemodel
       activerecord-import
       activesupport
@@ -57,7 +57,7 @@ GEM
     parser (2.5.1.0)
       ast (~> 2.4.0)
     powerpack (0.1.1)
-    rack (2.0.4)
+    rack (2.0.5)
     rack-test (1.0.0)
       rack (>= 1.0, < 3)
     rails-dom-testing (2.0.3)
@@ -104,7 +104,7 @@ GEM
     thread_safe (0.3.6)
     tzinfo (1.2.5)
       thread_safe (~> 0.1)
-    unicode-display_width (1.3.0)
+    unicode-display_width (1.3.2)
 
 PLATFORMS
   ruby
