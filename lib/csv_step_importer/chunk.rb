@@ -8,6 +8,8 @@ module CSVStepImporter
       super **attributes
 
       self.cache = {}
+      self.first_row = first_row
+
       add_rows rows: rows, row_class: row_class
       add_children processor_classes
     end
