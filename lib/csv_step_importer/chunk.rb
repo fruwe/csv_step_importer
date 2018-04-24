@@ -2,9 +2,9 @@
 
 module CSVStepImporter
   class Chunk < CSVStepImporter::Node
-    attr_accessor :cache, :rows
+    attr_accessor :cache, :rows, :first_row
 
-    def initialize(rows: [], row_class: CSVStepImporter::Row, processor_classes: nil, **attributes)
+    def initialize(rows: [], row_class: CSVStepImporter::Row, processor_classes: nil, first_row: 2, **attributes)
       super **attributes
 
       self.cache = {}
@@ -16,7 +16,7 @@ module CSVStepImporter
       row_parent_node = CSVStepImporter::Node.new parent: self
 
       unless rows.empty? || rows.first.is_a?(row_class)
-        row_number = 0
+        row_number = self.first_row - 1
         rows = rows.collect do |row|
           row_class.new(parent: row_parent_node, row_number: row_number += 1, **row)
         end

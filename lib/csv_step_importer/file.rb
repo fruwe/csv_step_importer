@@ -31,9 +31,18 @@ module CSVStepImporter
     def load_csv
       raise CSVFileNotFoundError.new unless ::File.exists? path
 
+      first_row = 2
+
       ::SmarterCSV.process(path, **csv_options.deep_dup) do |rows|
         self.headers ||= rows.first&.keys
-        add_children chunk_class.new parent: self, rows: rows, row_class: row_class, processor_classes: processor_classes
+        add_children chunk_class.new(
+          first_row: first_row,
+          parent: self,
+          processor_classes: processor_classes,
+          row_class: row_class,
+          rows: rows,
+        )
+        first_row += rows.size
       end
     rescue EOFError => exception
       self.csv_load_error = exception
