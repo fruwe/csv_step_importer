@@ -44,13 +44,20 @@ module CSVStepImporter
         )
         first_row += rows.size
       end
-    rescue EOFError => exception
-      self.csv_load_error = exception
     rescue CSVFileNotFoundError => exception
+      # File not found
       self.csv_load_error = exception
-    rescue ::Encoding::InvalidByteSequenceError => exception
+    rescue ::ArgumentError => exception
+      # expected encoding UTF-8, but was Excel
       self.csv_load_error = exception
     rescue ::CSV::MalformedCSVError => exception
+      # CSV malformed
+      self.csv_load_error = exception
+    rescue ::Encoding::InvalidByteSequenceError => exception
+      # expected encoding CP932, but was excel file
+      self.csv_load_error = exception
+    rescue ::EOFError => exception
+      # empty file
       self.csv_load_error = exception
     end
 
