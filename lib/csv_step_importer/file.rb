@@ -48,6 +48,8 @@ module CSVStepImporter
       self.csv_load_error = exception
     rescue CSVFileNotFoundError => exception
       self.csv_load_error = exception
+    rescue ::Encoding::InvalidByteSequenceError => exception
+      self.csv_load_error = exception
     rescue ::CSV::MalformedCSVError => exception
       self.csv_load_error = exception
     end
