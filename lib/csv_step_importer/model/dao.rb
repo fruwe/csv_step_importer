@@ -3,15 +3,16 @@
 module CSVStepImporter
   module Model
     class DAO < CSVStepImporter::Node
-      attr_accessor :id, :row
+      attr_accessor :id, :row, :attributes
 
       delegate :columns, to: :model
 
       validates :row, presence: true
 
-      def initialize(row:, **attributes)
-        super **attributes
+      def initialize(parent:, row:, **attributes)
+        super parent: parent
 
+        self.attributes = attributes
         self.row = row
       end
 
@@ -21,7 +22,7 @@ module CSVStepImporter
 
       def value
         @value ||= columns.each_with_object({}) do |key, values|
-          values[key] = send key
+          values[key] = respond_to?(key) ? send(key) : attributes[key]
         end
       end
 
