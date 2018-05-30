@@ -17,27 +17,31 @@ module CSVStepImporter
         CSVStepImporter::Model::Importer
       end
 
-      # set to nil in order to deactivate
+      # return CSVStepImporter::Model::Reflector in order to enable reflections (e.g. get ids of all rows)
+      # disabled by default
       def reflector_class
-        # in order to enable reflections return reflector class: CSVStepImporter::Model::Reflector
         nil
       end
 
+      # NOTE: required only when reflector class is set
       # example: env[:company].company_users
       def finder_scope
         model_class.all
       end
 
+      # NOTE: required only when reflector class is set
       # example: [:email]
       def finder_keys
         raise "please extend and implement"
       end
 
+      # NOTE: required only when importer class is set
       # see: https://github.com/zdennis/activerecord-import/wiki/On-Duplicate-Key-Update
       def on_duplicate_key_ignore
         false
       end
 
+      # NOTE: required only when importer class is set
       # example [:email, :updated_at]
       # see: https://github.com/zdennis/activerecord-import/wiki/On-Duplicate-Key-Update
       def on_duplicate_key_update
