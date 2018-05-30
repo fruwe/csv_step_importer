@@ -22,7 +22,21 @@ module CSVStepImporter
 
       def value
         @value ||= columns.each_with_object({}) do |key, values|
-          values[key] = respond_to?(key) ? send(key) : attributes[key]
+          values[key] = value_for_key key
+        end
+      end
+
+      def value_for_key key
+        if respond_to?(key)
+          send key
+        elsif attributes.include? key
+          attributes[key]
+        elsif row.respond_to?(key)
+          row.send key
+        elsif row.attributes.include? key
+          row.attributes[key]
+        else
+          nil
         end
       end
 

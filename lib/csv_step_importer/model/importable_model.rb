@@ -12,10 +12,12 @@ module CSVStepImporter
         raise "please extend and implement"
       end
 
+      # set to nil in order to deactivate
       def importer_class
         CSVStepImporter::Model::Importer
       end
 
+      # set to nil in order to deactivate
       def reflector_class
         CSVStepImporter::Model::Reflector
       end
