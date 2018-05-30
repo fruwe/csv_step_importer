@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "smarter_csv"
+
 module CSVStepImporter
   class File < CSVStepImporter::Node
     class CSVFileNotFoundError < CSVImportError; end
