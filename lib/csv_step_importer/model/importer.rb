@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "activerecord-import"
+
 module CSVStepImporter
   module Model
     class Importer < CSVStepImporter::Node
