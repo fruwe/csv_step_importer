@@ -15,6 +15,8 @@ Add this line to your application's Gemfile:
 gem 'csv_step_importer'
 ```
 
+NOTE: you might need to add `gem 'smarter_csv', github: 'tilo/smarter_csv'` if you encounter problems building rows
+
 And then execute:
 
     $ bundle
