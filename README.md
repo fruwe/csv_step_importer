@@ -1,8 +1,11 @@
-# CSVStepImporter
+# csv_step_importer
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/csv_step_importer`. To experiment with that code, run `bin/console` for an interactive prompt.
+A library to validate, speed up and organize bulk insertion of complex CSV data, including multi-table data.
 
-TODO: Delete this and the text above, and describe your gem
+It depends on
+
+- [zdennis/activerecord-import](https://github.com/zdennis/activerecord-import)
+- [GitHub - tilo/smarter_csv](https://github.com/tilo/smarter_csv)
 
 ## Installation
 
@@ -22,7 +25,64 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+### Hello world
+
+Create a new rails application:
+
+```shell
+rails new currency_wiki --database=mysql
+cd currency_wiki
+echo "gem 'csv_step_importer'" >> Gemfile
+bundle install
+rails g model currency code:string:uniq name:string
+rails db:create db:migrate
+```
+
+Then edit the model like this:
+
+/app/models/currency.rb
+
+```ruby
+class Currency < ApplicationRecord
+  class ImportableModel < CSVStepImporter::Model::ImportableModel
+    # The model to be updated
+    def model_class
+      ::Currency
+    end
+
+    def columns
+      [:code, :name, :created_at, :updated_at]
+    end
+
+    def on_duplicate_key_update
+      [:name, :updated_at]
+    end
+  end
+end
+```
+
+
+Create a test CSV file and upload it
+
+```shell
+rails c
+```
+
+```ruby
+File.open("currencies.csv", "w") do |file|
+  file.write(<<~CSV)
+    Name,Code
+    Euro,EUR
+    United States dollar,USD
+    Japanese Yen,JPY
+  CSV
+end
+
+CSVStepImporter::File.new(path: 'currencies.csv', processor_classes: [Currency::ImportableModel]).save
+
+puts Currency.all.to_yaml
+```
+
 
 ## Development
 
@@ -32,7 +92,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/csv_step_importer. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at https://github.com/fruwe/csv_step_importer. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
 ## License
 
@@ -40,4 +100,4 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ## Code of Conduct
 
-Everyone interacting in the CSVStepImporter project’s codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/csv_step_importer/blob/master/CODE_OF_CONDUCT.md).
+Everyone interacting in the CSVStepImporter project’s codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/fruwe/csv_step_importer/blob/master/CODE_OF_CONDUCT.md).

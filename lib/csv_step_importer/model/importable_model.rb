@@ -19,7 +19,8 @@ module CSVStepImporter
 
       # set to nil in order to deactivate
       def reflector_class
-        CSVStepImporter::Model::Reflector
+        # in order to enable reflections return reflector class: CSVStepImporter::Model::Reflector
+        nil
       end
 
       # example: env[:company].company_users
