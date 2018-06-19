@@ -26,7 +26,7 @@ module CSVStepImporter
         end
       end
 
-      def value_for_key key
+      def value_for_key(key)
         if respond_to?(key)
           send key
         elsif attributes.include? key

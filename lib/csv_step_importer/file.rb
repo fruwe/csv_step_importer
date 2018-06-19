@@ -35,8 +35,11 @@ module CSVStepImporter
 
       first_row = 2
 
-      ::SmarterCSV.process(path, **csv_options.deep_dup) do |rows|
-        self.headers ||= rows.first&.keys
+      options = csv_options.deep_dup
+      options[:header_transformations] ||= []
+      options[:header_transformations] << header_proc
+
+      ::SmarterCSV.process(path, **options) do |rows|
         add_children chunk_class.new(
           first_row: first_row,
           parent: self,
@@ -66,6 +69,14 @@ module CSVStepImporter
     def validate_csv_load_error
       return unless csv_load_error
       errors[:csv_file] << I18n.t("csv_step_importer.errors.#{csv_load_error.class.name.underscore.gsub(/\//, '_')}")
+    end
+
+  private
+    def header_proc
+      Proc.new { |headers|
+        self.headers = headers
+        headers
+      }
     end
   end
 end
