@@ -85,6 +85,33 @@ CSVStepImporter::File.new(path: 'currencies.csv', processor_classes: [Currency::
 puts Currency.all.to_yaml
 ```
 
+### Simple model
+
+By default, for each row read from the CSV file, a DAO belonging to a model will be created.
+These models will be validated and saved in the order specified by the processor_classes option.
+
+The simplest model is one, which simply calls `save` on all DAOs, which calls internally `create_or_update`.
+`create_or_update` is customizable.
+
+Example:
+
+This example will call `find_or_create_by` for each row after all validations have passed.
+
+```ruby
+class SimpleDAO < CSVStepImporter::Model::DAO
+  def create_or_update
+    Currency.find_or_create_by( name: row.name, code: row.code )
+  end
+end
+
+class SimpleModel < CSVStepImporter::Model::Model
+  def dao_class
+    SimpleDAO
+  end
+end
+
+CSVStepImporter::File.new(path: 'currencies.csv', processor_classes: [SimpleModel]).save
+```
 
 ## Development
 

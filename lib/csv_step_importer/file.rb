@@ -22,10 +22,8 @@ module CSVStepImporter
       self.row_class = row_class || CSVStepImporter::Row
       self.processor_classes = processor_classes
 
-      self.csv_options = {
-        chunk_size: 1000,
-        file_encoding: "CP932:UTF-8",
-      }.merge(csv_options)
+      self.csv_options = csv_options
+      precompile_csv_options!
 
       load_csv
     end
@@ -35,11 +33,7 @@ module CSVStepImporter
 
       first_row = 2
 
-      options = csv_options.deep_dup
-      options[:header_transformations] ||= []
-      options[:header_transformations] << header_proc
-
-      ::SmarterCSV.process(path, **options) do |rows|
+      ::SmarterCSV.process(path, **csv_options) do |rows|
         add_children chunk_class.new(
           first_row: first_row,
           parent: self,
@@ -77,6 +71,40 @@ module CSVStepImporter
         self.headers = headers
         headers
       }
+    end
+
+    def keys_as_symbols(case_sensitive: false)
+      if case_sensitive
+        Proc.new { |headers|
+          headers.map { |x| x.strip.gsub(%r{"}, '').gsub(/(\s|\-)+/, '_').to_sym }
+        }
+      else
+        # use existing helper
+        :keys_as_symbols
+      end
+    end
+
+    def precompile_csv_options!
+      # set default options
+      self.csv_options = {
+        chunk_size: 1000,
+        file_encoding: "CP932:UTF-8",
+      }.merge(csv_options)
+
+      # easier specification of headers, including case case sensitive headers
+      if csv_options[:headers] || csv_options[:case_sensitive_headers]
+        if csv_options[:header_transformations]
+          raise "either use header_transformations or headers (and case_sensitive_headers optionally)"
+        end
+
+        csv_options[:header_transformations] = [ :none ]
+        csv_options[:header_transformations] << { key_mapping: csv_options.delete(:headers) } if csv_options[:headers]
+        csv_options[:header_transformations] << keys_as_symbols(case_sensitive: csv_options.delete(:case_sensitive_headers))
+      end
+
+      # retrieve headers from CSV
+      csv_options[:header_transformations] ||= []
+      csv_options[:header_transformations] << header_proc
     end
   end
 end
