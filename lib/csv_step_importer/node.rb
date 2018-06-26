@@ -10,7 +10,7 @@ module CSVStepImporter
     delegate :cache, to: :root
     delegate :root, to: :parent
 
-    validate :validate_children
+    after_validation :validate_children
 
     def initialize(parent: nil, children: [], env: nil)
       super()
@@ -44,6 +44,13 @@ module CSVStepImporter
     def create_or_update
       children.empty? || children.all?(&:save)
     end
+
+    # NOTE: the native after_validation seems not be able to influence the return value of run_validations!
+    # However, children should only be validated if the parent is valid
+    def run_validations!
+      super
+      errors.empty?
+     end
 
     def validate_children
       return unless errors.empty?
