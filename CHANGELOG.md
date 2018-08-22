@@ -25,12 +25,21 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
     case_insensitive_symbols:
       "A z" becomes :a_z
 
-    symbols:
-      "A z" becomes :"A z"
-
     preserve:
       "A z" will stay "A z"
 ```
 
 ### Changed
 - Deprecated csv_option case_sensitive_headers
+
+## 2018-08-22 Version 0.9.1
+### Added
+- Add csv_option headers_mode
+
+```
+  Add following option:
+    symbols:
+      "A z" becomes :"A z"
+```
+
+### Changed
