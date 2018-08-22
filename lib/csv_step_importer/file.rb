@@ -73,17 +73,6 @@ module CSVStepImporter
       }
     end
 
-    def keys_as_symbols(case_sensitive: false)
-      if case_sensitive
-        Proc.new { |headers|
-          headers.map { |x| x.strip.gsub(%r{"}, '').gsub(/(\s|\-)+/, '_').to_sym }
-        }
-      else
-        # use existing helper
-        :keys_as_symbols
-      end
-    end
-
     def precompile_csv_options!
       # set default options
       self.csv_options = {
@@ -92,19 +81,53 @@ module CSVStepImporter
       }.merge(csv_options)
 
       # easier specification of headers, including case case sensitive headers
-      if csv_options[:headers] || csv_options[:case_sensitive_headers]
+      if csv_options[:headers] || csv_options[:headers_mode] || csv_options[:case_sensitive_headers]
         if csv_options[:header_transformations]
           raise "either use header_transformations or headers (and case_sensitive_headers optionally)"
         end
 
         csv_options[:header_transformations] = [ :none ]
         csv_options[:header_transformations] << { key_mapping: csv_options.delete(:headers) } if csv_options[:headers]
-        csv_options[:header_transformations] << keys_as_symbols(case_sensitive: csv_options.delete(:case_sensitive_headers))
+        csv_options[:header_transformations] << header_mode_transformer
       end
 
       # retrieve headers from CSV
       csv_options[:header_transformations] ||= []
       csv_options[:header_transformations] << header_proc
+    end
+
+    def header_mode_transformer
+      case headers_mode
+      when :case_sensitive_symbols
+        Proc.new { |headers|
+          headers.map { |x| x.strip.gsub(%r{"}, "").gsub(/(\s|\-)+/, "_").to_sym }
+        }
+      when :case_insensitive_symbols
+        # use existing helper
+        :keys_as_symbols
+      when :preserve
+        Proc.new { |headers| headers }
+      else
+        raise "unknown headers_mode #{headers_mode}"
+      end
+    end
+
+    def headers_mode
+      if csv_options[:case_sensitive_headers]
+        ActiveSupport::Deprecation.warn(
+          "Key `:case_sensitive_headers` is deprecated, please use `:headers_mode` with a value of" +
+          " `:case_sensitive_symbols` instead"
+        )
+
+        if csv_options[:headers_mode]
+          raise "Key `:case_sensitive_headers` is deprecated, and will be ignored, since headers_mode is specified"
+        end
+
+        csv_options.delete(:case_sensitive_headers)
+        csv_options[:headers_mode] = :case_sensitive_symbols
+      end
+
+      csv_options[:headers_mode] || :preserve
     end
   end
 end
