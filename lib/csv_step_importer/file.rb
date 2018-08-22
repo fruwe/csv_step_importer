@@ -106,7 +106,9 @@ module CSVStepImporter
         # use existing helper
         :keys_as_symbols
       when :symbols
-        Proc.new { |headers| headers.to_sym }
+        Proc.new { |headers|
+          headers.map { |x| x.strip.to_sym }
+        }
       when :preserve
         Proc.new { |headers| headers }
       else

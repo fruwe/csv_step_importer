@@ -43,3 +43,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ```
 
 ### Changed
+
+## 2018-08-22 Version 0.9.2
+### Added
+
+### Changed
+- Change csv_option headers_mode options symbols
+
+```
+  Add following option:
+    symbols:
+      "A z" becomes :"A z"
+      " A z " becomes :"A z"
+      "A\"z" becomes :"A\"z"
+```
