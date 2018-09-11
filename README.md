@@ -32,7 +32,7 @@ Or install it yourself as:
 Create a new rails application:
 
 ```shell
-rails new currency_wiki --database=mysql
+rails new currency_wiki
 cd currency_wiki
 echo "gem 'csv_step_importer'" >> Gemfile
 bundle install
