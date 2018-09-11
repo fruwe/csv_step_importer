@@ -57,3 +57,32 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
       " A z " becomes :"A z"
       "A\"z" becomes :"A\"z"
 ```
+
+## 2018-09-11 Version 0.10.0
+### Added
+- Added a simple wrapper class for File and Chunk called Loader to use the same interface for importing a plain array of hashes as well as CSV files.
+
+Usage:
+
+```ruby
+CSVStepImporter::Loader.new(rows: data, processor_classes: [Author::ImportableModel]).save!
+```
+
+See lib/csv_step_importer/chunk.rb for more options
+
+or
+
+```ruby
+CSVStepImporter::Loader.new(
+  path: 'authors.csv',
+  processor_classes: [Author::ImportableModel],
+  csv_options: {file_encoding: "UTF-8"}
+).save!
+```
+
+See lib/csv_step_importer/file.rb for more options
+
+### Changed
+
+- Changed README, especially a note to include smarter_csv 2.0.0.pre1 into your project
+- Chunks default for the first row index is now 0

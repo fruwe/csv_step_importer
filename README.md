@@ -1,6 +1,6 @@
 # csv_step_importer
 
-A library to validate, speed up and organize bulk insertion of complex CSV data, including multi-table data.
+A library to validate, speed up and organize bulk insertion of complex CSV data into multiple tables.
 
 It depends on
 
@@ -12,7 +12,9 @@ It depends on
 Add this line to your application's Gemfile:
 
 ```ruby
+# Quicker CSV processing
 gem 'csv_step_importer'
+gem 'smarter_csv', github: 'tilo/smarter_csv'
 ```
 
 NOTE: you might need to add `gem 'smarter_csv', github: 'tilo/smarter_csv'` if you encounter problems building rows
@@ -27,62 +29,125 @@ Or install it yourself as:
 
 ## Usage
 
-### Hello world
+### Hello world setup (super simple sample, single table, no user-defined row, no user-defined dao)
 
-Create a new rails application:
+First let's create a basic rails application to play around with
 
 ```shell
-rails new currency_wiki
-cd currency_wiki
-echo "gem 'csv_step_importer'" >> Gemfile
+rails new bookshop --database=mysql
+cd bookshop
+echo "gem 'csv_step_importer'
+gem 'smarter_csv', github: 'tilo/smarter_csv'" >> Gemfile
 bundle install
-rails g model currency code:string:uniq name:string
+rails g model author name:string:uniq email:string
+rails g model book author:references name:string:uniq
 rails db:create db:migrate
 ```
 
 Then edit the model like this:
 
-/app/models/currency.rb
+app/models/author.rb
 
 ```ruby
-class Currency < ApplicationRecord
+class Author < ApplicationRecord
   class ImportableModel < CSVStepImporter::Model::ImportableModel
     # The model to be updated
     def model_class
-      ::Currency
+      puts Module.nesting.inspect
+      Module.nesting[1]
     end
 
     def columns
-      [:code, :name, :created_at, :updated_at]
+      [:name, :email, :created_at, :updated_at]
     end
 
     def on_duplicate_key_update
-      [:name, :updated_at]
+      [:email, :updated_at]
     end
   end
 end
 ```
 
-
-Create a test CSV file and upload it
+### Simple upload of a single row
 
 ```shell
 rails c
 ```
 
 ```ruby
-File.open("currencies.csv", "w") do |file|
+irb(main)> data = [{ name: 'Milan Kundera', email: 'milan.kundera@example.com' }]
+irb(main)> importer = CSVStepImporter::Loader.new(rows: data, processor_classes: [Author::ImportableModel])
+irb(main)> importer.valid?
+=> true
+irb(main)> importer.save!
+   (1.1ms)  SET NAMES utf8,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483
+   (0.4ms)  BEGIN
+  [Author::ImportableModel, Author(id: integer, name: string, email: string, created_at: datetime, updated_at: datetime)]
+   (13.3ms)  SHOW VARIABLES like 'max_allowed_packet';
+  Author Create Many Without Validations Or Callbacks (9.2ms)  INSERT INTO `authors` (`name`,`email`,`created_at`,`updated_at`) VALUES ('Milan Kundera','milan.kundera@example.com','2018-09-11 11:33:07','2018-09-11 11:33:07') ON DUPLICATE KEY UPDATE `authors`.`email`=VALUES(`email`),`authors`.`updated_at`=VALUES(`updated_at`)
+   (154.6ms)  COMMIT
+  => true
+
+irb(main)> puts JSON.parse(Author.all.to_json).to_yaml # Isn't there an easy way to get clean yaml...
+
+   ---
+   - id: 7
+     name: Milan Kundera
+     email: milan.kundera@example.com
+     created_at: '2018-09-11T11:42:15.000Z'
+     updated_at: '2018-09-11T11:42:15.000Z'
+
+irb(main)> data = [{ name: 'Milan Kundera', email: 'milan.kundera2@example.com' }, { name: 'Immanuel Kant', email: 'immanuel.kant@example.com' }]
+irb(main)> CSVStepImporter::Loader.new(rows: data, processor_classes: [Author::ImportableModel]).save!
+=> true
+irb(main)> puts JSON.parse(Author.all.to_json).to_yaml # Isn't there an easy way to get clean yaml...
+
+# NOTE: updated_at changed, but the id did not
+---
+- id: 7
+  name: Milan Kundera
+  email: milan.kundera2@example.com
+  created_at: '2018-09-11T11:42:15.000Z'
+  updated_at: '2018-09-11T12:19:17.000Z'
+- id: 9
+  name: Immanuel Kant
+  email: immanuel.kant@example.com
+  created_at: '2018-09-11T12:19:17.000Z'
+  updated_at: '2018-09-11T12:19:17.000Z'
+```
+
+### File import using [tilo/smarter_csv](https://github.com/tilo/smarter_csv)
+
+```shell
+rails c
+```
+
+```ruby
+irb(main)> File.open("authors.csv", "w") do |file|
   file.write(<<~CSV)
-    Name,Code
-    Euro,EUR
-    United States dollar,USD
-    Japanese Yen,JPY
+    Name,Email
+    Milan Kundera,milan.kundera@example.com
+    Immanuel Kant,immanuel.kant@example.com
   CSV
 end
 
-CSVStepImporter::File.new(path: 'currencies.csv', processor_classes: [Currency::ImportableModel]).save
+irb(main)> CSVStepImporter::Loader.new(path: 'authors.csv', processor_classes: [Author::ImportableModel], csv_options: {file_encoding: "UTF-8"}).save
+=> true
 
-puts Currency.all.to_yaml
+irb(main)> puts JSON.parse(Author.all.to_json).to_yaml
+
+# NOTE: The email and updated_at is updated as specified in on_duplicate_key_update
+---
+- id: 7
+  name: Milan Kundera
+  email: milan.kundera@example.com
+  created_at: '2018-09-11T11:42:15.000Z'
+  updated_at: '2018-09-11T12:24:13.000Z'
+- id: 9
+  name: Immanuel Kant
+  email: immanuel.kant@example.com
+  created_at: '2018-09-11T12:19:17.000Z'
+  updated_at: '2018-09-11T12:24:13.000Z'
 ```
 
 ### Simple model
@@ -110,7 +175,7 @@ class SimpleModel < CSVStepImporter::Model::Model
   end
 end
 
-CSVStepImporter::File.new(path: 'currencies.csv', processor_classes: [SimpleModel]).save
+CSVStepImporter::Loader.new(path: 'currencies.csv', processor_classes: [SimpleModel]).save
 ```
 
 ## Development

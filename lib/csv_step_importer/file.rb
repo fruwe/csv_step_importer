@@ -14,12 +14,12 @@ module CSVStepImporter
     validates :row_class, presence: true
     validate :validate_csv_load_error
 
-    def initialize(path:, chunk_class: nil, row_class: nil, csv_options: {}, processor_classes: nil, **attributes)
+    def initialize(path:, chunk_class: CSVStepImporter::Chunk, row_class: CSVStepImporter::Row, csv_options: {}, processor_classes: nil, **attributes)
       super **attributes
 
-      self.chunk_class = chunk_class || CSVStepImporter::Chunk
+      self.chunk_class = chunk_class
       self.path = path
-      self.row_class = row_class || CSVStepImporter::Row
+      self.row_class = row_class
       self.processor_classes = processor_classes
 
       self.csv_options = csv_options

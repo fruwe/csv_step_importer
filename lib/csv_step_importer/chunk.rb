@@ -4,7 +4,7 @@ module CSVStepImporter
   class Chunk < CSVStepImporter::Node
     attr_accessor :cache, :rows, :first_row
 
-    def initialize(rows: [], row_class: CSVStepImporter::Row, processor_classes: nil, first_row: 2, **attributes)
+    def initialize(rows: [], row_class: CSVStepImporter::Row, processor_classes: nil, first_row: 0, **attributes)
       super **attributes
 
       self.cache = {}
