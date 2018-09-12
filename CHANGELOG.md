@@ -129,3 +129,8 @@ See lib/csv_step_importer/file.rb for more options
 
 - ImportableModel's finder_keys method now defaults to composite_key_columns
 - ImportableModel's Importer (uses ActiveRecord::Import) now raises an exception if the import fails
+
+## 2018-09-11 Version 0.11.1
+### Added
+### Changed
+- Fixed `composite_key_columns` filter functionality

@@ -79,14 +79,14 @@ module CSVStepImporter
       def filter_daos!
         unique_daos = {}
 
-        daos.delete_if do |dao|
-          hash = dao.value.slice(composite_key_columns).hash
-          should_delete = (unique_daos[hash] ||= dao) == dao
+        daos.keep_if do |dao|
+          hash = dao.value.slice(*composite_key_columns).hash
+          keep = (unique_daos[hash] ||= dao) == dao
 
           # unlink to be deleted dao and add a link to
-          dao.unlink! replace_with: unique_daos[hash] unless should_delete
+          dao.unlink! replace_with: unique_daos[hash] unless keep
 
-          should_delete
+          keep
         end
       end
 
