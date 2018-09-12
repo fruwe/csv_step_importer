@@ -14,7 +14,7 @@ module CSVStepImporter
       delegate :dao_values, to: :parent
 
       def create_or_update
-        model_class.import(
+        model_class.import!(
           columns,
           dao_values,
           on_duplicate_key_ignore: on_duplicate_key_ignore,

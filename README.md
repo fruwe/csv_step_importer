@@ -53,12 +53,21 @@ class Author < ApplicationRecord
   class ImportableModel < CSVStepImporter::Model::ImportableModel
     # The model to be updated
     def model_class
-      puts Module.nesting.inspect
       Module.nesting[1]
+    end
+
+    # return CSVStepImporter::Model::Reflector in order to enable reflections (e.g. get ids of all rows)
+    # disabled by default
+    def reflector_class
+      CSVStepImporter::Model::Reflector
     end
 
     def columns
       [:name, :email, :created_at, :updated_at]
+    end
+
+    def composite_key_columns
+      [:name]
     end
 
     def on_duplicate_key_update

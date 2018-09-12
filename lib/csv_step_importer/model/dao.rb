@@ -20,12 +20,14 @@ module CSVStepImporter
         parent.parent
       end
 
+      # returns an array of all column values, used for batch importing
       def value
         @value ||= columns.each_with_object({}) do |key, values|
           values[key] = value_for_key key
         end
       end
 
+      # retrieve a value for a key from the dao or row
       def value_for_key(key)
         if respond_to?(key)
           send key
@@ -41,7 +43,7 @@ module CSVStepImporter
       end
 
       def create_or_update
-        # Daoの保存処理は基本的にstepsで行います
+        # DAOs are usually processed in batches by the model and not saved one by one
         true
       end
 
@@ -55,6 +57,32 @@ module CSVStepImporter
 
       def updated_at
         current_timestamp
+      end
+
+      # retrieve a dao for a different model using the same CSV row. This is useful e.g. if you use the reflector to get ids of related data
+      def dao_for model:, pluralize: false
+        row.cache[model.cache_key(pluralize: pluralize)]
+      end
+
+      # link this dao to a row
+      def link!
+        # add to cache with pluralized key
+        (row.cache[model.cache_key(pluralize: true)] ||= []) << self
+
+        # add to cache with singular key (for convenience)
+        row.cache[model.cache_key(pluralize: false)] = self
+      end
+
+      # unlink this dao from the row and replace it with a different dao
+      def unlink! replace_with: nil
+        cached_daos = row.cache[model.cache_key(pluralize: true)]
+
+        # remove from cache with pluralized key
+        cached_daos.delete self
+        cached_daos << replace_with
+
+        # set any dao to cache with singular key (for convenience)
+        row.cache[model.cache_key(pluralize: false)] = cached_daos.first
       end
     end
   end
