@@ -7,11 +7,13 @@ module CSVStepImporter
     class Model < CSVStepImporter::Node
       attr_accessor :dao_values
       delegate :rows, :cache, to: :parent
+      delegate :cache_key, to: :class
 
       def initialize(**attributes)
         super **attributes
 
         add_daos
+        filter_daos! if composite_key_columns
         add_model_children
       end
 
@@ -19,8 +21,9 @@ module CSVStepImporter
       # Configuration
       #########################################################
 
-      def self.cache_key
-        name.underscore.split("/").last.to_sym
+      def self.cache_key pluralize: false
+        key = name.underscore.gsub('/', '_')
+        (pluralize ? key.pluralize : key.singularize).to_sym
       end
 
       # example: [:email, :updated_at, :created_at]
@@ -30,6 +33,11 @@ module CSVStepImporter
 
       def dao_class
         CSVStepImporter::Model::DAO
+      end
+
+      # specify to an array of columns in order filter duplicates from daos
+      def composite_key_columns
+        nil
       end
 
       #########################################################
@@ -67,14 +75,23 @@ module CSVStepImporter
         dao_class.new parent: dao_node, row: row
       end
 
-      def link_rows_to_daos(daos:)
-        daos.each do |dao|
-          # add to cache with pluralized key
-          (dao.row.cache[self.class.cache_key.to_s.pluralize.to_sym] ||= []) << dao
+      # TODO a possible feature would be to add validation errors if the duplicates do not match in all columns (columns other than the composite key)
+      def filter_daos!
+        unique_daos = {}
 
-          # add dao to cache
-          dao.row.cache[self.class.cache_key] = dao
+        daos.delete_if do |dao|
+          hash = dao.value.slice(composite_key_columns).hash
+          should_delete = (unique_daos[hash] ||= dao) == dao
+
+          # unlink to be deleted dao and add a link to
+          dao.unlink! replace_with: unique_daos[hash] unless should_delete
+
+          should_delete
         end
+      end
+
+      def link_rows_to_daos(daos:)
+        daos.each(&:link!)
       end
     end
   end

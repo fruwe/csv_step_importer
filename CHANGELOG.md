@@ -86,3 +86,46 @@ See lib/csv_step_importer/file.rb for more options
 
 - Changed README, especially a note to include smarter_csv 2.0.0.pre1 into your project
 - Chunks default for the first row index is now 0
+
+## 2018-09-11 Version 0.11.0
+### Added
+- Added methods to DAO
+  - dao_for(model:, pluralize: false)
+    retrieve a dao for a different model using the same CSV row. This is useful e.g. if you use the reflector to get ids of related data
+  - link!
+    link this dao to a row
+  - unlink!
+    unlink this dao from the row and replace it with a different dao
+- Model allows now to specify a unique composite key `composite_key_columns` to avoid duplicated daos.
+
+  Usage:
+
+  ```ruby
+  class Author < ApplicationRecord
+    class ImportableModel < CSVStepImporter::Model::ImportableModel
+      def composite_key_columns
+        [:name]
+      end
+    end
+  end
+  ```
+
+  And a CSV which contains the same name twice or more, like this:
+
+  ```csv
+  Author,Book
+  A1,B1
+  A1,B2
+  A2,B3
+  ```
+
+  If you do NOT specify `composite_key_columns` you will get three DAOs for A1, A1 and A2.
+  If you specify `composite_key_columns` non unique daos will be removed and you only will get A1 and A2.
+
+- The `Model`'s `cache_key` method allows now a `pluralize` option.
+- The `Model`'s `cache_key` method is now available in the instance as well.
+
+### Changed
+
+- ImportableModel's finder_keys method now defaults to composite_key_columns
+- ImportableModel's Importer (uses ActiveRecord::Import) now raises an exception if the import fails

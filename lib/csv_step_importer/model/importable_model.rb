@@ -32,7 +32,7 @@ module CSVStepImporter
       # NOTE: required only when reflector class is set
       # example: [:email]
       def finder_keys
-        raise "please extend and implement"
+        composite_key_columns || raise("please extend and implement")
       end
 
       # NOTE: required only when importer class is set
