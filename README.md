@@ -7,6 +7,10 @@ It depends on
 - [zdennis/activerecord-import](https://github.com/zdennis/activerecord-import)
 - [GitHub - tilo/smarter_csv](https://github.com/tilo/smarter_csv)
 
+## Sample Application (Thanks to @vochicong)
+
+[vochicong/csv_step_importer_sample](https://github.com/vochicong/csv_step_importer_sample)
+
 ## Installation
 
 Add this line to your application's Gemfile:
