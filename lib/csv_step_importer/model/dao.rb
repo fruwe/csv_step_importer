@@ -60,7 +60,7 @@ module CSVStepImporter
       end
 
       # retrieve a dao for a different model using the same CSV row. This is useful e.g. if you use the reflector to get ids of related data
-      def dao_for model:, pluralize: false
+      def dao_for(model:, pluralize: false)
         row.cache[model.cache_key(pluralize: pluralize)]
       end
 
@@ -74,7 +74,7 @@ module CSVStepImporter
       end
 
       # unlink this dao from the row and replace it with a different dao
-      def unlink! replace_with: nil
+      def unlink!(replace_with: nil)
         cached_daos = row.cache[model.cache_key(pluralize: true)]
 
         # remove from cache with pluralized key

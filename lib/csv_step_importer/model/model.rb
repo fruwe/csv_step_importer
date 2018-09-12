@@ -21,8 +21,8 @@ module CSVStepImporter
       # Configuration
       #########################################################
 
-      def self.cache_key pluralize: false
-        key = name.underscore.gsub('/', '_')
+      def self.cache_key(pluralize: false)
+        key = name.underscore.gsub("/", "_")
         (pluralize ? key.pluralize : key.singularize).to_sym
       end
 
