@@ -68,7 +68,7 @@ class Author < ApplicationRecord
 end
 ```
 
-### Simple upload of a single row
+### Import a single data row
 
 ```shell
 rails c
@@ -116,7 +116,7 @@ irb(main)> puts JSON.parse(Author.all.to_json).to_yaml # Isn't there an easy way
   updated_at: '2018-09-11T12:19:17.000Z'
 ```
 
-### File import using [tilo/smarter_csv](https://github.com/tilo/smarter_csv)
+### Import a CSV data file
 
 ```shell
 rails c
@@ -153,7 +153,7 @@ irb(main)> puts JSON.parse(Author.all.to_json).to_yaml
 ### Simple model
 
 By default, for each row read from the CSV file, a DAO belonging to a model will be created.
-These models will be validated and saved in the order specified by the processor_classes option.
+These models will be validated and saved in the order specified by the `processor_classes` option.
 
 The simplest model is one, which simply calls `save` on all DAOs, which calls internally `create_or_update`.
 `create_or_update` is customizable.
@@ -165,7 +165,7 @@ This example will call `find_or_create_by` for each row after all validations ha
 ```ruby
 class SimpleDAO < CSVStepImporter::Model::DAO
   def create_or_update
-    Currency.find_or_create_by( name: row.name, code: row.code )
+    Currency.find_or_create_by(name: row.name, code: row.code)
   end
 end
 
@@ -182,7 +182,7 @@ CSVStepImporter::Loader.new(path: 'currencies.csv', processor_classes: [SimpleMo
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+To install this gem onto your local machine, run `rake install`. To release a new version, update the version number in `version.rb`, and then run `rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
 
 ## Contributing
 
