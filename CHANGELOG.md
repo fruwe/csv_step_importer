@@ -141,3 +141,19 @@ See lib/csv_step_importer/file.rb for more options
 - Revert "ImportableModel's Importer (uses ActiveRecord::Import) now raises an exception if the import fails"
   Since import! runs validations on the model, I reverted import! to import (validations should be performed inside csv_step_importers logic)
 
+## 2018-09-14 Version 0.12.0
+### Added
+- Added a `set` method to Base, in order to make settings shorter
+  Usage:
+  ```ruby
+    class X < Node
+      set :config_a, true
+      set :config_b, -> { row.some_array.first }
+    end
+  ```
+- Added dao_for to Row
+### Changed
+- Changed settings to use the new set method
+- dao_for's interface changed
+  Before: `dao_for(model: some_model_class_or_instance, pluralize: optional_boolean)`
+  After: `dao_for(some_model_class_or_instance, pluralize: optional_boolean)`

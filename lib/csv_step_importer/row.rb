@@ -16,5 +16,10 @@ module CSVStepImporter
       # Rowの保存処理は基本的にstepsで行います
       true
     end
+
+    # retrieve a dao for a different model using the same CSV row. This is useful e.g. if you use the reflector to get ids of related data
+    def dao_for(model, pluralize: false)
+      cache[model.cache_key(pluralize: pluralize)]
+    end
   end
 end

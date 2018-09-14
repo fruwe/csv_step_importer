@@ -50,7 +50,7 @@ module CSVStepImporter
     def run_validations!
       super
       errors.empty?
-     end
+    end
 
     def validate_children
       return unless errors.empty?
