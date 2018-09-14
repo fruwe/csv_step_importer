@@ -12,6 +12,12 @@ module CSVStepImporter
     class CSVImportError < RuntimeError; end
     class CSVFileImportError < CSVImportError; end
 
+    # defines a method with the specified proc or a proc returning the value of the second attribute
+    def self.set name, value_or_proc
+      procedure = value_or_proc.is_a?(Proc) ? value_or_proc : -> { value_or_proc }
+      define_method name, procedure
+    end
+
     def assign_attributes(attributes)
       attributes.each do |key, value|
         send("#{key}=", value)

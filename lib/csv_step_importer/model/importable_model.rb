@@ -8,45 +8,31 @@ module CSVStepImporter
       #########################################################
 
       # example: User
-      def model_class
-        raise "please extend and implement"
-      end
+      set :model_class, -> { raise "please extend and implement" }
 
       # set to nil in order to deactivate
-      def importer_class
-        CSVStepImporter::Model::Importer
-      end
+      set :importer_class, CSVStepImporter::Model::Importer
 
       # return CSVStepImporter::Model::Reflector in order to enable reflections (e.g. get ids of all rows)
       # disabled by default
-      def reflector_class
-        nil
-      end
+      set :reflector_class, nil
 
       # NOTE: required only when reflector class is set
       # example: env[:company].company_users
-      def finder_scope
-        model_class.all
-      end
+      set :finder_scope, -> { model_class.all }
 
       # NOTE: required only when reflector class is set
       # example: [:email]
-      def finder_keys
-        composite_key_columns || raise("please extend and implement")
-      end
+      set :finder_keys, -> { composite_key_columns || raise("please extend and implement") }
 
       # NOTE: required only when importer class is set
       # see: https://github.com/zdennis/activerecord-import/wiki/On-Duplicate-Key-Update
-      def on_duplicate_key_ignore
-        false
-      end
+      set :on_duplicate_key_ignore, false
 
       # NOTE: required only when importer class is set
       # example [:email, :updated_at]
       # see: https://github.com/zdennis/activerecord-import/wiki/On-Duplicate-Key-Update
-      def on_duplicate_key_update
-        raise "please extend and implement"
-      end
+      set :on_duplicate_key_update, -> { raise "please extend and implement" }
 
       #########################################################
       # Logic

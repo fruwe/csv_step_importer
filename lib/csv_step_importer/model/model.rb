@@ -9,6 +9,18 @@ module CSVStepImporter
       delegate :rows, :cache, to: :parent
       delegate :cache_key, to: :class
 
+      #########################################################
+      # Configuration
+      #########################################################
+
+      set :columns, -> { raise "please extend and implement" } # example: [:email, :updated_at, :created_at]
+      set :composite_key_columns, nil # specify to an array of columns in order filter duplicates from daos
+      set :dao_class, CSVStepImporter::Model::DAO
+
+      #########################################################
+      # Logic
+      #########################################################
+
       def initialize(**attributes)
         super **attributes
 
@@ -24,20 +36,6 @@ module CSVStepImporter
       def self.cache_key(pluralize: false)
         key = name.underscore.gsub("/", "_")
         (pluralize ? key.pluralize : key.singularize).to_sym
-      end
-
-      # example: [:email, :updated_at, :created_at]
-      def columns
-        raise "please extend and implement"
-      end
-
-      def dao_class
-        CSVStepImporter::Model::DAO
-      end
-
-      # specify to an array of columns in order filter duplicates from daos
-      def composite_key_columns
-        nil
       end
 
       #########################################################

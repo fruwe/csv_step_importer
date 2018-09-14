@@ -6,8 +6,20 @@ module CSVStepImporter
       attr_accessor :id, :row, :attributes
 
       delegate :columns, to: :model
+      delegate :dao_for, to: :row
 
       validates :row, presence: true
+
+      #########################################################
+      # Configuration
+      #########################################################
+
+      set :created_at, -> { current_timestamp }
+      set :updated_at, -> { current_timestamp }
+
+      #########################################################
+      # Logic
+      #########################################################
 
       def initialize(parent:, row:, **attributes)
         super parent: parent
@@ -49,19 +61,6 @@ module CSVStepImporter
 
       def current_timestamp
         model.cache[:updated_at] ||= (::ActiveRecord::Base.default_timezone == :utc ? ::Time.now.utc : ::Time.now).to_s(:db)
-      end
-
-      def created_at
-        current_timestamp
-      end
-
-      def updated_at
-        current_timestamp
-      end
-
-      # retrieve a dao for a different model using the same CSV row. This is useful e.g. if you use the reflector to get ids of related data
-      def dao_for(model:, pluralize: false)
-        row.cache[model.cache_key(pluralize: pluralize)]
       end
 
       # link this dao to a row
