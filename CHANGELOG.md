@@ -157,3 +157,19 @@ See lib/csv_step_importer/file.rb for more options
 - dao_for's interface changed
   Before: `dao_for(model: some_model_class_or_instance, pluralize: optional_boolean)`
   After: `dao_for(some_model_class_or_instance, pluralize: optional_boolean)`
+
+## 2018-09-14 Version 0.13.0
+### Added
+- Added option `ignore_invalid_rows` in Row. Ignores all rows with failing validations.
+  Usage:
+    Row.set :ignore_invalid_rows, true # or you set it in your row class
+    loader = Loader.new *options
+    loader.valid? # => true # Bad rows are ignored, however all other validations still need to pass
+    loader.errors # => []
+    loader.save! # true
+  This also adds the `include_row?` method to the Row class, which will return false, if the row should not be included.
+- Add use_transaction to all nodes. Default is `false`, except in Chunk.
+  This causes all succeeding chunks to be committed, but will rollback failing chunks.
+  If you require data wide transactions, use `Loader.set :use_transaction, true`
+### Changed
+- Fix and optimize filtering of daos, when composite_key_columns are applied.

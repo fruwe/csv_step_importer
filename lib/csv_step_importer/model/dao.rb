@@ -34,9 +34,7 @@ module CSVStepImporter
 
       # returns an array of all column values, used for batch importing
       def value
-        @value ||= columns.each_with_object({}) do |key, values|
-          values[key] = value_for_key key
-        end
+        @value ||= values_for columns
       end
 
       # retrieve a value for a key from the dao or row
@@ -51,6 +49,12 @@ module CSVStepImporter
           row.attributes[key]
         else
           nil
+        end
+      end
+
+      def values_for(included_keys)
+        included_keys.each_with_object({}) do |key, values|
+          values[key] = value_for_key key
         end
       end
 

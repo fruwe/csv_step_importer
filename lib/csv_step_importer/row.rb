@@ -4,6 +4,16 @@ module CSVStepImporter
   class Row < CSVStepImporter::Node
     attr_accessor :attributes, :cache, :row_number
 
+    #########################################################
+    # Configuration
+    #########################################################
+
+    set :ignore_invalid_rows, false
+
+    #########################################################
+    # Logic
+    #########################################################
+
     def initialize(parent:, row_number:, **attributes)
       super parent: parent
 
@@ -20,6 +30,10 @@ module CSVStepImporter
     # retrieve a dao for a different model using the same CSV row. This is useful e.g. if you use the reflector to get ids of related data
     def dao_for(model, pluralize: false)
       cache[model.cache_key(pluralize: pluralize)]
+    end
+
+    def include_row?
+      ignore_invalid_rows ? valid? : true
     end
   end
 end

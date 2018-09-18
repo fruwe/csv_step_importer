@@ -78,7 +78,7 @@ module CSVStepImporter
         unique_daos = {}
 
         daos.keep_if do |dao|
-          hash = dao.value.slice(*composite_key_columns).hash
+          hash = dao.values_for(composite_key_columns).hash
           keep = (unique_daos[hash] ||= dao) == dao
 
           # unlink to be deleted dao and add a link to

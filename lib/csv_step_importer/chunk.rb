@@ -2,6 +2,8 @@
 
 module CSVStepImporter
   class Chunk < CSVStepImporter::Node
+    set :use_transaction, true
+
     attr_accessor :cache, :rows, :first_row
 
     def initialize(rows: [], row_class: CSVStepImporter::Row, processor_classes: nil, first_row: 0, **attributes)
@@ -21,7 +23,7 @@ module CSVStepImporter
         row_number = self.first_row - 1
         rows = rows.collect do |row|
           row_class.new(parent: row_parent_node, row_number: row_number += 1, **row)
-        end
+        end.find_all(&:include_row?)
       end
 
       @rows = rows
