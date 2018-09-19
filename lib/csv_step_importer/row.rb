@@ -35,5 +35,9 @@ module CSVStepImporter
     def include_row?
       ignore_invalid_rows ? valid? : true
     end
+
+    def method_missing(sym,*)
+      attributes.fetch(sym){attributes.fetch(sym.to_s){super}}
+    end
   end
 end
