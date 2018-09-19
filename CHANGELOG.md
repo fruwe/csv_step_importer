@@ -180,3 +180,8 @@ See lib/csv_step_importer/file.rb for more options
 ### Added
 ### Changed
 - env is now a struct, so you can use now something like `delegate :something, to: :env` in your nodes
+
+## 2018-09-19 Version 0.15.0
+### Added
+- Row now uses method_missing to fetch attributes, so you can access them as methods. (only getters)
+### Changed
