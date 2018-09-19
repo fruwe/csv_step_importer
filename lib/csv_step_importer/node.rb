@@ -15,13 +15,17 @@ module CSVStepImporter
     def initialize(parent: nil, children: [], env: nil)
       super()
 
-      self.env = env
+      self.env = build_env(env) if env
       self.parent = parent
       self.children = children
     end
 
+    def build_env env
+      Struct.new(*env.keys).new(*env.values).freeze
+    end
+
     def env
-      @env || parent&.env || {}.freeze
+      @env || parent&.env
     end
 
     # childrenはHash型またはArray型です
