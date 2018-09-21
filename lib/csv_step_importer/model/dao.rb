@@ -43,12 +43,8 @@ module CSVStepImporter
           send key
         elsif attributes.include? key
           attributes[key]
-        elsif row.respond_to?(key)
-          row.send key
-        elsif row.attributes.include? key
-          row.attributes[key]
         else
-          nil
+          row.send key
         end
       end
 

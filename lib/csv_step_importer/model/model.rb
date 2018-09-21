@@ -14,7 +14,7 @@ module CSVStepImporter
       #########################################################
 
       set :columns, -> { raise "please extend and implement" } # example: [:email, :updated_at, :created_at]
-      set :composite_key_columns, nil # specify to an array of columns in order filter duplicates from daos
+      set :composite_key_columns, nil # specify an array of columns in order filter duplicates from daos after build
       set :dao_class, CSVStepImporter::Model::DAO
 
       #########################################################

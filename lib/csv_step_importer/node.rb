@@ -20,7 +20,7 @@ module CSVStepImporter
       self.children = children
     end
 
-    def build_env env
+    def build_env(env)
       Struct.new(*env.keys).new(*env.values).freeze
     end
 

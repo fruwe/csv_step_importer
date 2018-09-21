@@ -29,6 +29,10 @@ module CSVStepImporter
       end
     end
 
+    def ancestors
+      @ancestors ||= [parent] + (parent ? parent.ancestors : [])
+    end
+
     def persisted?
       false
     end

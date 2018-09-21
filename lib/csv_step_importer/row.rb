@@ -36,8 +36,12 @@ module CSVStepImporter
       ignore_invalid_rows ? valid? : true
     end
 
-    def method_missing(sym,*)
-      attributes.fetch(sym){attributes.fetch(sym.to_s){super}}
+    def headers
+      ancestors.find { |ancestor|ancestor.respond_to?(:headers) }&.headers
+    end
+
+    def method_missing(sym, *)
+      attributes.fetch(sym) { attributes.fetch(sym.to_s) { headers&.include?(sym) ? nil : super } }
     end
   end
 end
