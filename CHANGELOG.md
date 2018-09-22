@@ -185,3 +185,8 @@ See lib/csv_step_importer/file.rb for more options
 ### Added
 - Row now uses method_missing to fetch attributes, so you can access them as methods. (only getters)
 ### Changed
+
+## 2018-09-19 Version 0.15.1
+### Added
+### Changed
+- (FIX) row fetches introduced with v0.15.0 failed to return nil on empty CSV fields
