@@ -38,7 +38,7 @@ Or install it yourself as:
 First let's create a basic rails application to play around with
 
 ```shell
-rails new bookshop --database=mysql
+rails new bookshop --database=mysql --api --skip-spring --skip-test
 cd bookshop
 echo "gem 'csv_step_importer'
 gem 'smarter_csv', github: 'tilo/smarter_csv'" >> Gemfile
