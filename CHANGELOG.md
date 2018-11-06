@@ -190,3 +190,8 @@ See lib/csv_step_importer/file.rb for more options
 ### Added
 ### Changed
 - (FIX) row fetches introduced with v0.15.0 failed to return nil on empty CSV fields
+
+## 2018-09-19 Version 0.15.2
+### Added
+### Changed
+- Update gems (including gems marked as security risk)
