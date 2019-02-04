@@ -55,6 +55,9 @@ module CSVStepImporter
     rescue ::Encoding::InvalidByteSequenceError => exception
       # expected encoding CP932, but was excel file
       self.csv_load_error = exception
+    rescue ::Encoding::UndefinedConversionError => exception
+      # wrong encoding
+      self.csv_load_error = exception
     rescue ::EOFError => exception
       # empty file
       self.csv_load_error = exception

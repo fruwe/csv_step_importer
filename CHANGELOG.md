@@ -195,3 +195,8 @@ See lib/csv_step_importer/file.rb for more options
 ### Added
 ### Changed
 - Update gems (including gems marked as security risk)
+
+## 2018-09-19 Version 0.15.3
+### Added
+- Catch ::Encoding::UndefinedConversionError during CSV load for validation
+### Changed
